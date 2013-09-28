@@ -13,8 +13,7 @@ from datamodel import *
 '''
 class UpdateEntriesHandler(webapp2.RequestHandler):
 
-	@db.transactional
-	def updateTag(self, tagId, masterId, timeStamp):
+	def updateRegisteredTag(self, tagId, masterId, timeStamp):
 		try:
 			tagKey = db.Key.from_path('Tags', tagId)
 			tagDB = db.get(tagKey)
@@ -24,6 +23,27 @@ class UpdateEntriesHandler(webapp2.RequestHandler):
 				tagDB.put()
 		except BadKeyError:
 			logging.error("Could not find the key")
+
+	def updateTagsRemoved(self, tag, tagsRegisteredId):
+		if tag.key().name() not in tagsRegisteredId:
+			tag.masterId = "Not Registered"
+			tag.put()
+
+	@db.transactional
+	def updateTags(self, tagsRegistered, masterId)
+		tagsRegisteredId = []
+		for tag in tagsRegistered:
+			tagId = tag['tag_id']
+			tagTimestamp = tag['tag_timestamp']
+			tagDtstamp = datetime.datetime.strptime(tagTimestamp, '%Y-%m-%d %H:%M:%S')
+			logging.info(tagId + masterId)
+			logging.info(tagDtstamp)
+			self.updateRegisteredTag(tagId, masterId, tagDtstamp)
+			tagsRegisteredId.append(tagId)
+
+		allTagsinMaster = db.GqlQuery("Select * FROM Tags WHERE masterId=:1", masterId)
+		for tag in allTagsinMaster:
+			self.updateTagsRemoved(tag, tagsRegisteredId)
 	
 	def get(self):
 		pass
@@ -37,21 +57,7 @@ class UpdateEntriesHandler(webapp2.RequestHandler):
 		try: 
 			masterId = jsonObj['master_id']
 			tagsRegistered = jsonObj['tags']
-			tagsRegisteredId = []
-			for tag in tagsRegistered:
-				tagId = tag['tag_id']
-				tagTimestamp = tag['tag_timestamp']
-				tagDtstamp = datetime.datetime.strptime(tagTimestamp, '%Y-%m-%d %H:%M:%S')
-				logging.info(tagId + masterId)
-				logging.info(tagDtstamp)
-				self.updateTag(tagId, masterId, tagDtstamp)
-				tagsRegisteredId.append(tagId)
-
-			allTagsinMaster = db.GqlQuery("Select * FROM Tags WHERE masterId=:1", masterId)
-			for tag in allTagsinMaster:
-				if tag.key().name() not in tagsRegisteredId:
-					tag.masterId = "Not Registered"
-					tag.put()
+			self.updateTags(tagsRegistered, masterId)
 
 		except ValueError:
 			logging.error("We could not break your Json")
