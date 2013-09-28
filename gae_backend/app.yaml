@@ -1,0 +1,32 @@
+application: tracksit-backend
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /favicon\.ico
+  static_files: favicon.ico
+  upload: favicon\.ico
+
+- url: /entries_update/
+  script: main.app
+
+- url: /entries_get/
+  script: main.app
+
+- url: /component_update/
+  script: main.app
+
+- url: /component_getall/
+  script: main.app 
+
+- url: /timestamp_getlog/
+  script: main.app
+
+- url: /test_generate/
+  script: main.app
+
+libraries:
+- name: webapp2
+  version: "2.5.2"
