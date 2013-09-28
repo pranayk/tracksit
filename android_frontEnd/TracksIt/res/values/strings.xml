@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TracksIt</string>
+    <string name="action_edit">Edit</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_edit">Edit</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_masters_list">MastersList</string>
+    <string name="masters">Available Masters</string>
+    <string name="title_activity_tags_list">TagsList</string>
+
+</resources>

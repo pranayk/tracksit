@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.view.ViewPager  xmlns:android = "http://schemas.android.com/apk/res/android"
+    xmlns:tools = "http://schemas.android.com/tools"
+    android:id = "@+id/editPager"
+    android:layout_width = "match_parent"
+    android:layout_height = "match_parent"
+    tools:context = ".Edit">
+    <android.support.v4.view.PagerTabStrip
+        android:id = "@+id/edit_pager_tab_strip"
+        android:layout_width = "match_parent"
+        android:layout_height = "wrap_content"
+        android:layout_gravity = "top"
+        android:background = "#FFFFFF"
+        android:textColor = "#000000"
+        android:textSize="12sp"
+        android:paddingTop = "10dp"
+        android:paddingBottom = "10dp"/>
+</android.support.v4.view.ViewPager>
