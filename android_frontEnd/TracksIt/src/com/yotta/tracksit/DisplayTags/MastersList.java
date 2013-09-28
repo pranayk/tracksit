@@ -2,8 +2,10 @@ package com.yotta.tracksit.DisplayTags;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import android.app.ListActivity;
 import android.content.Intent;
@@ -26,7 +28,6 @@ import com.yotta.tracksit.Models.Master;
 import com.yotta.tracksit.Models.Tag;
 
 public class MastersList extends ListActivity {
-
 	
 	ArrayList<Master> masters = new ArrayList<Master>();
 	private String[] MastersName = {"masterA", "masterB", "masterC"};
@@ -37,34 +38,39 @@ public class MastersList extends ListActivity {
 	
 	Handler handler = new Handler();
 	String TAG = "MastersList";
+	private customAdapter adapter;
+	ListView lv;
 	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_masters_list);
-		sendRequest();
+		
+		//Get latest components: component_update
+		//sendRequest();
+		adapter = new customAdapter(masters, getApplicationContext(), "Master");
 		populateMastersList();
+		
+		sendRequest();
 	}
 
-	private void populateMastersList() {
-		
-		
+	private synchronized void populateMastersList() {
+
 		//Populating Masters List
+		/*
 		for(int i = 0; i<3; i++)
 		{
 			 Master masterDetail = new Master();
 	         masterDetail.masterName = MastersName[i];
 	         masters.add(masterDetail);
 		}
+		*/
 		
-		ListView lv = (ListView) findViewById(android.R.id.list);
-
+		lv = (ListView) findViewById(android.R.id.list);
 		
 		lv.setSelector(R.drawable.selector_list);
-	    lv.setAdapter(new customAdapter(masters, this, "Master"));
-	
-	    
+	    lv.setAdapter(adapter);
 
 		// React to user clicks on item
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -72,11 +78,11 @@ public class MastersList extends ListActivity {
 		    	 
 		    	 //Populating Tags List for Master
 		    	 for(int i = 0; i<3; i++)
-		 		{
+		 		 {
 		 			 Tag tagDetail = new Tag();
 		 	         tagDetail.tagName = TagsName[i];
 		 	         tags.add(tagDetail);
-		 		}
+		 		 }
 		    		
 		    	 Intent intent = new Intent(MastersList.this, TagsList.class);
 		 		 intent.putParcelableArrayListExtra(SELECT_MASTER, tags);
@@ -112,10 +118,9 @@ public class MastersList extends ListActivity {
         startActivity(intent);		
 	}
 
-	public void sendRequest() {
-
-		HttpListener l = new HttpListener() {
-
+	void sendRequest()
+	{
+		HttpListener hListener = new HttpListener() {
 			
 			@Override
 			public void onSuccess(final String response) {
@@ -129,10 +134,31 @@ public class MastersList extends ListActivity {
 						//JSONObject jObject = new JSONObject(response);
 						Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
 						
+						try{
+							
+							Log.d("DEBUG LOAD", "OnSuccessLoad");
+							JSONObject allComponents = new JSONObject(response);
+				            JSONArray  mastersArray = allComponents.getJSONArray("masters");
+				        	
+			                for (int i = 0; i < mastersArray.length(); i++) {
+				                JSONObject mastersObject = mastersArray.getJSONObject(i);
+				                
+				                Master tempMaster = new Master();
+			                    
+				                tempMaster.masterName = mastersObject.getString("master_name");
+				                tempMaster.masterID = mastersObject.getString("master_id");
+				                
+				                masters.add(tempMaster);
+			                }
+			                //populateMastersList();
+			                //lv.setAdapter(new customAdapter(masters, getApplicationContext(), "Master"));
+			                adapter.notifyDataSetChanged();
+						}
+						catch (JSONException e) {
+						    e.printStackTrace();
+						}
 					}
-
 				});
-
 			}
 
 			@Override
@@ -147,26 +173,11 @@ public class MastersList extends ListActivity {
 					public void run() {
 						// TODO Auto-generated method stub
 						Log.e(TAG, _response);
-
 					}
-
 				});
 			}
-
 		};
-			
-
-			JSONObject jObject = new JSONObject();
-			try {
-				jObject.put("M1", "MAC SUKX, SO DOES WINDOWS :) - LONG LIVE LINUX");
-				HttpInterface.sendData(l, jObject);
-				
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				Log.e(getClass().getName(), " JSON Exception");
-				e.printStackTrace();
-				l.onFailure("JSON Exception");
-		}
+		HttpInterface.componentGetData(hListener);
 	}
-
 }
+
