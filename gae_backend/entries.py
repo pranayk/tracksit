@@ -3,6 +3,7 @@ import logging
 import datetime
 import time
 import json
+import sys
 
 from google.appengine.ext import db
 from datamodel import *
@@ -13,17 +14,25 @@ from datamodel import *
 '''
 class UpdateEntriesHandler(webapp2.RequestHandler):
 
-	@db.transactional
 	def updateTag(self, tagId, masterId, timeStamp):
 		try:
 			tagKey = db.Key.from_path('Tags', tagId)
 			tagDB = db.get(tagKey)
-			if(tagDB.timeStamp < timeStamp):	
+			if(tagDB.timeStamp < timeStamp):
+
+				''' If the masterId in this tag is different than the one that is registering this tag then
+					add a timeLog saying this item was added '''
+				if tagDB.masterId != masterId:
+					masterKey = db.Key.from_path('Masters', masterId)
+					masterDB = db.get(masterKey)
+					TimeStampLogs(tagId=tagId, tagTimeStamp=timeStamp, tagStatus="Added to", masterName=masterDB.masterName).put()
+
 				tagDB.masterId = masterId
 				tagDB.timeStamp = timeStamp
 				tagDB.put()
-		except BadKeyError:
-			logging.error("Could not find the key")
+
+		except:
+			logging.error("Unexpected error")
 	
 	def get(self):
 		pass
@@ -42,19 +51,23 @@ class UpdateEntriesHandler(webapp2.RequestHandler):
 				tagId = tag['tag_id']
 				tagTimestamp = tag['tag_timestamp']
 				tagDtstamp = datetime.datetime.strptime(tagTimestamp, '%Y-%m-%d %H:%M:%S')
-				logging.info(tagId + masterId)
-				logging.info(tagDtstamp)
 				self.updateTag(tagId, masterId, tagDtstamp)
 				tagsRegisteredId.append(tagId)
 
 			allTagsinMaster = db.GqlQuery("Select * FROM Tags WHERE masterId=:1", masterId)
 			for tag in allTagsinMaster:
 				if tag.key().name() not in tagsRegisteredId:
+
+					''' If the tag is not in the masters registeredTags list anymore
+						then add a timeLog saying tha item was removed from this master'''
+					masterKey = db.Key.from_path('Masters', masterId)
+					masterDB = db.get(masterKey)
+					TimeStampLogs(tagId=tag.key().name(), tagTimeStamp=tag.timeStamp, tagStatus="Removed from", masterName=masterDB.masterName).put()						
 					tag.masterId = "Not Registered"
 					tag.put()
 
 		except ValueError:
-			logging.error("We could not break your Json")
+			logging.error('We could not break your Json')
 
 		logging.info('Finished Updating Entries')
 

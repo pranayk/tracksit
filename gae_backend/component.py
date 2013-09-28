@@ -58,7 +58,6 @@ class UpdateComponentsHandler(webapp2.RequestHandler):
 			for tag in tagsUpdate:
 				tagId = tag['tag_id']
 				tagName = tag['tag_name']
-				logging.info(tagId + tagName)
 				self.updateTag(tagId, tagName)
 
 		except ValueError:
