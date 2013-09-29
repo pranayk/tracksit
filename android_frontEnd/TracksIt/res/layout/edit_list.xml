@@ -6,7 +6,6 @@
 	android:paddingBottom="8dp"
 	android:focusable="false"
     android:focusableInTouchMode="false"
-    android:background="@drawable/g_card"
     android:listSelector="@drawable/selector_list" >
     
 	

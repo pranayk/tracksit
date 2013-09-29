@@ -1,5 +1,6 @@
 package com.yotta.tracksit;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
@@ -9,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.yotta.tracksit.Adapters.MyFragmentPagerAdapter;
+import com.yotta.tracksit.DisplayTags.MastersList;
 
 public class Edit extends FragmentActivity {
 
@@ -31,13 +33,9 @@ public class Edit extends FragmentActivity {
         editViewPager.setAdapter(pagerAdapter);
         editViewPager.setPageMargin(20);
         
-        
         pagerTabStrip.setDrawFullUnderline(true);
-        //  pagerTabStrip.setBackgroundColor(color.background_light);
         pagerTabStrip.setTabIndicatorColor(0xffbb33);
- 
-		
-	}
+ 	}
 
 	/**
 	 * Set up the {@link android.app.ActionBar}.
@@ -45,7 +43,6 @@ public class Edit extends FragmentActivity {
 	private void setupActionBar() {
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
-
 	}
 
 	@Override
@@ -59,17 +56,15 @@ public class Edit extends FragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			// This ID represents the Home or Up button. In the case of this
-			// activity, the Up button is shown. Use NavUtils to allow users
-			// to navigate up one level in the application structure. For
-			// more details, see the Navigation pattern on Android Design:
-			//
-			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
-			//
-			NavUtils.navigateUpFromSameTask(this);
+			startActivity(new Intent(this, MastersList.class));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public void onBackPressed() {
+		startActivity(new Intent(this, MastersList.class));
 	}
 
 }

@@ -30,8 +30,6 @@ import com.yotta.tracksit.Models.Tag;
 public class MastersList extends ListActivity {
 	
 	ArrayList<Master> masters = new ArrayList<Master>();
-	private String[] MastersName = {"masterA", "masterB", "masterC"};
-	private String[] TagsName = {"tagA", "tagB", "tagC"};
 	ArrayList<Tag> tags = new ArrayList<Tag>();
 	
 	String SELECT_MASTER = "com.yotta.TracksIt.CallTags";
@@ -42,31 +40,29 @@ public class MastersList extends ListActivity {
 	ListView lv;
 	
 	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_masters_list);
+		}
+	
+	@Override
+	protected void onStart() {
+	    super.onStart();  // Always call the superclass method first
+	    
+	    setContentView(R.layout.activity_masters_list);
 		
-		//Get latest components: component_update
-		//sendRequest();
 		adapter = new customAdapter(masters, getApplicationContext(), "Master");
 		populateMastersList();
 		
+		//Get latest components: component_update
 		sendRequest();
+	 
+	    
 	}
 
 	private synchronized void populateMastersList() {
 
-		//Populating Masters List
-		/*
-		for(int i = 0; i<3; i++)
-		{
-			 Master masterDetail = new Master();
-	         masterDetail.masterName = MastersName[i];
-	         masters.add(masterDetail);
-		}
-		*/
-		
 		lv = (ListView) findViewById(android.R.id.list);
 		
 		lv.setSelector(R.drawable.selector_list);
@@ -75,17 +71,12 @@ public class MastersList extends ListActivity {
 		// React to user clicks on item
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 		     public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long id) {
+		    	
+		    	 Master currentMaster = new Master();
+		    	 currentMaster = masters.get(position);
 		    	 
-		    	 //Populating Tags List for Master
-		    	 for(int i = 0; i<3; i++)
-		 		 {
-		 			 Tag tagDetail = new Tag();
-		 	         tagDetail.tagName = TagsName[i];
-		 	         tags.add(tagDetail);
-		 		 }
-		    		
 		    	 Intent intent = new Intent(MastersList.this, TagsList.class);
-		 		 intent.putParcelableArrayListExtra(SELECT_MASTER, tags);
+		 		 intent.putExtra(SELECT_MASTER, currentMaster);
 		         
 		    	 startActivity(intent);
 		         
@@ -115,7 +106,7 @@ public class MastersList extends ListActivity {
 	void edit()
 	{
 		Intent intent = new Intent(this, Edit.class);
-        startActivity(intent);		
+		startActivity(intent);		
 	}
 
 	void sendRequest()
@@ -132,7 +123,6 @@ public class MastersList extends ListActivity {
 					public void run() {
 						// TODO Auto-generated method stub
 						//JSONObject jObject = new JSONObject(response);
-						Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
 						
 						try{
 							
