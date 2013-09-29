@@ -15,7 +15,7 @@ public class TimeTask {
         private Handler mHandler = new Handler(Looper.getMainLooper());
 
         private Runnable mStatusChecker;
-        private int UPDATE_INTERVAL = 5000;
+        private int UPDATE_INTERVAL = 1000;
 
         /**
          * Creates an syncUpdater object, that can be used to

@@ -6,7 +6,7 @@ public class HttpInterface {
 	
 	//Tests
 	private static String URL 		= "http://tracksit-backend.appspot.com/entries_update/";
-	private static String testURL 		= "http://postcatcher.in/catchers/5247451cb13ef302000003ee";
+	private static String testURL 		= "http://postcatcher.in/catchers/5247ad36b13ef3020000097c";
 	
 	/**
 	 * FOR POST METHODS: for dispatchPOST pass: (URL, httpListener, data: JSONObject jobject)

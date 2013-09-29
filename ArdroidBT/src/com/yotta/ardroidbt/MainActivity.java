@@ -42,7 +42,7 @@ public class MainActivity extends Activity implements OnClickListener{
     private BluetoothAdapter mBluetoothAdapter = null;
     private BluetoothSocket btSocket = null;
     private OutputStream outStream = null;
-    private static String address = "00:12:11:23:04:62"; //"00:07:80:99:57:64"
+    private static String address = "00:06:66:4E:DC:6D"; //"00:07:80:99:57:64" //00:06:66:4E:DC:6D //00:12:11:23:04:62
     private static final UUID MY_UUID = UUID
                     .fromString("00001101-0000-1000-8000-00805F9B34FB");
     private InputStream inStream = null;
@@ -159,6 +159,7 @@ public class MainActivity extends Activity implements OnClickListener{
                             btSocket.close();
                     } catch (IOException e) {
                     }
+            finish();
     }
    
     public void beginListenForData()   {
@@ -197,10 +198,14 @@ public class MainActivity extends Activity implements OnClickListener{
                                     //Log.d("Byte: ", ""+ test);
                                     if(b == delimiter && b != carrReturn) //|| b != carrReturn
                                     {
-                                        byte[] encodedBytes = new byte[readBufferPosition];
+                                        byte[] encodedBytes = new byte[10];
                                         //if(encodedBytes.length != 0) // readBufferPosition != 0
-                                        //{
-	                                        System.arraycopy(readBuffer, 0, encodedBytes, 0, encodedBytes.length);
+                                        //{ 
+                                        int len;
+                                       
+                                        if(encodedBytes.length >= 10) len = 10;
+                                        else len=encodedBytes.length;
+	                                        System.arraycopy(readBuffer, 0, encodedBytes, 0, len); //encodedBytes.length
 	                                        if(encodedBytes.length != 0)
 	                                        {
 	                                        	//Log.d("IN TEXT APPEND: ", ":)");
@@ -222,12 +227,12 @@ public class MainActivity extends Activity implements OnClickListener{
 		                                                    try {
 																jObj.put("tag_timestamp", dateTime);
 																jObj.put("tag_id", data);
-		                                                    /*boolean check = true;
+		                                                    boolean check = true;
 		                                                    for(int i=0; i<jList.length(); i++) {
 		                                                    	if(jList.getJSONObject(i).equals(jObj))
 		                                                    		check = false;
 		                                                    }
-		                                                    if(check)*/
+		                                                    if(check)
 		                                                    	jList.put(jObj);
 		                                                    } catch (JSONException e) {
 																// TODO Auto-generated catch block
