@@ -49,8 +49,8 @@ public class MastersList extends ListActivity {
 	@Override
 	protected void onStart() {
 	    super.onStart();  // Always call the superclass method first
-	    
-	    setContentView(R.layout.activity_masters_list);
+	    masters.removeAll(masters);
+		setContentView(R.layout.activity_masters_list);
 		
 		adapter = new customAdapter(masters, getApplicationContext(), "Master");
 		populateMastersList();
@@ -106,6 +106,7 @@ public class MastersList extends ListActivity {
 	void edit()
 	{
 		Intent intent = new Intent(this, Edit.class);
+		masters.removeAll(masters);
 		startActivity(intent);		
 	}
 

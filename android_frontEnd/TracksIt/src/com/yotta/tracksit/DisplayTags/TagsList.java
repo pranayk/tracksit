@@ -114,8 +114,6 @@ public class TagsList extends Activity {
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
-						//JSONObject jObject = new JSONObject(response);
-						
 						/*
 						 * [{"master_tags": [], "master_id": "M1", "master_name": "wow"}, 
 						 * {"master_tags": [{"tag_name": "U", "tag_id": "GHIF"}, 

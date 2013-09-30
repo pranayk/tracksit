@@ -18,7 +18,7 @@
 -->
 
 <resources>
-    <drawable name="selected">#CCFFBB33</drawable>
-    <drawable name="focused">#FEBFBF</drawable>
-    <color name="pressed_tracksit">#CCFFBB33</color>
+    <drawable name="selected">#FFBB33</drawable>
+    <drawable name="focused">#FFBB33</drawable>
+    <color name="pressed_tracksit">#FFBB33</color>
 </resources>

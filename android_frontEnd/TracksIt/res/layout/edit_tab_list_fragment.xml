@@ -9,11 +9,9 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:divider="#b5b5b5"
-        android:dividerHeight="1dp"
+        android:divider="@null"
         android:paddingLeft="5dip"
-        android:paddingRight="5dip"
-        android:listSelector="@drawable/selector_list" >
+        android:paddingRight="5dip" >
     </ListView>
 
 </LinearLayout>
